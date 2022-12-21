@@ -15,6 +15,10 @@ class FanView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ): View(context, attrs, defStyleAttr) {
 
+    init {
+        isClickable = true
+    }
+
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         color = Color.GREEN
@@ -25,6 +29,13 @@ class FanView @JvmOverloads constructor(
         LOW(R.string.speed_ten),
         MEDIUM(R.string.speed_twenty),
         HIGH(R.string.speed_thirty);
+
+        fun next() = when(this) {
+            OFF -> LOW
+            LOW -> MEDIUM
+            MEDIUM -> HIGH
+            HIGH -> OFF
+        }
     }
 
     private var radius = 0.0f                   // Radius of the circle.
@@ -89,6 +100,16 @@ class FanView @JvmOverloads constructor(
 
         canvas.drawArc(rectF, 0F, -180F, true, paint)
 
+    }
+
+    override fun performClick(): Boolean {
+        if (super.performClick()) return true
+
+        fanSpeed = fanSpeed.next()
+        contentDescription = resources.getString(fanSpeed.label)
+
+        invalidate()
+        return true
     }
 
     companion object {  // Offsets on circle in degrees
