@@ -8,6 +8,7 @@ import java.lang.StrictMath.min
 import kotlin.math.cos
 import kotlin.math.sin
 
+
 class FanView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -21,9 +22,9 @@ class FanView @JvmOverloads constructor(
 
     private enum class FanSpeed(val label: Int) {
         OFF(0),
-        LOW(1),
-        MEDIUM(2),
-        HIGH(3);
+        LOW(10),
+        MEDIUM(20),
+        HIGH(30);
     }
 
     private var radius = 0.0f                   // Radius of the circle.
@@ -48,7 +49,7 @@ class FanView @JvmOverloads constructor(
 
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
-        radius = (min(width, height) / 2.0 * 0.8).toFloat()
+        radius = (min(width, height) * 0.4).toFloat()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -75,6 +76,18 @@ class FanView @JvmOverloads constructor(
             val label = i.ordinal.toString()
             canvas.drawText(label, pointPosition.x, pointPosition.y, paintFan)
         }
+        // Draw arc
+        val centerArcOffset: Float = 0.2F * radius
+        val rectF = RectF(
+            (width / 2).toFloat() - radius + centerArcOffset,
+            (height / 2).toFloat() - radius + centerArcOffset,
+            (width / 2).toFloat() + radius - centerArcOffset,
+            (height / 2).toFloat() + radius - centerArcOffset)
+//        paint.color = Color.BLACK
+        paint.shader =
+            object : LinearGradient((width / 2).toFloat() - radius, (height / 2).toFloat() - radius, height.toFloat(), height.toFloat(), Color.BLUE, Color.RED, Shader.TileMode.MIRROR){}
+
+        canvas.drawArc(rectF, 0F, -180F, true, paint)
 
     }
 
