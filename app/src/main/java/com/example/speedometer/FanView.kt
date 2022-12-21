@@ -21,10 +21,10 @@ class FanView @JvmOverloads constructor(
     }
 
     private enum class FanSpeed(val label: Int) {
-        OFF(0),
-        LOW(10),
-        MEDIUM(20),
-        HIGH(30);
+        OFF(R.string.speed_zero),
+        LOW(R.string.speed_ten),
+        MEDIUM(R.string.speed_twenty),
+        HIGH(R.string.speed_thirty);
     }
 
     private var radius = 0.0f                   // Radius of the circle.
@@ -73,7 +73,7 @@ class FanView @JvmOverloads constructor(
         for (i in FanSpeed.values()) {
             pointPosition.computeXYForSpeed(i, labelRadius)
 //            val label = resources.getString(i.label)  // TODO from res
-            val label = i.ordinal.toString()
+            val label = resources.getString(i.label)
             canvas.drawText(label, pointPosition.x, pointPosition.y, paintFan)
         }
         // Draw arc

@@ -3,4 +3,5 @@
     <string name="speed_zero">0</string>
     <string name="speed_ten">10</string>
     <string name="speed_twenty">20</string>
+    <string name="speed_thirty">30</string>
 </resources>
