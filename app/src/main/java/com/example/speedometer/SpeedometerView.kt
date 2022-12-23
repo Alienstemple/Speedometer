@@ -4,12 +4,13 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
 import java.lang.StrictMath.min
 import kotlin.math.cos
 import kotlin.math.sin
 
 
-class FanView @JvmOverloads constructor(
+class SpeedometerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -18,10 +19,18 @@ class FanView @JvmOverloads constructor(
     init {
         isClickable = true
     }
+    private var speedBackgroundColor: Int = ContextCompat.getColor(context, R.color.dark_blue)
+    private var speedArcColor: Int = ContextCompat.getColor(context, R.color.light_blue)
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = Color.GREEN
+        color = speedBackgroundColor
+    }
+
+    private val paintText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        textSize = 55.0f
+        textAlign = Paint.Align.CENTER
     }
 
     private enum class FanSpeed(val label: Int) {
@@ -42,13 +51,7 @@ class FanView @JvmOverloads constructor(
     private var fanSpeed = FanSpeed.OFF         // The active selection.
     // position variable which will be used to draw label and indicator circle position
     private val pointPosition: PointF = PointF(0.0f, 0.0f)
-
-    private val paintFan = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
-        textAlign = Paint.Align.CENTER
-        textSize = 55.0f
-//        typeface = Typeface.create( "", Typeface.BOLD)   // FIXME crushes all!
-    }
+    
 
     private fun PointF.computeXYForSpeed(pos: FanSpeed, radius: Float) {
         // Angles are in radians.
@@ -66,18 +69,18 @@ class FanView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        paintFan.color = if (fanSpeed == FanSpeed.OFF) Color.GRAY else Color.GREEN
+        paint.color = if (fanSpeed == FanSpeed.OFF) Color.GRAY else Color.GREEN
 
 //        canvas.drawCircle((width / 2).toFloat(), (height / 2).toFloat(), (width / 2).toFloat(), paint)
 
         // Draw the dial.
-        canvas.drawCircle((width / 2).toFloat(), (height / 2).toFloat(), radius, paintFan)
+        canvas.drawCircle((width / 2).toFloat(), (height / 2).toFloat(), radius, paint)
 
         // Draw the indicator circle.
         val markerRadius = radius + RADIUS_OFFSET_INDICATOR
         pointPosition.computeXYForSpeed(fanSpeed, markerRadius)
-        paintFan.color = Color.BLACK
-        canvas.drawCircle(pointPosition.x, pointPosition.y, radius/12, paintFan)
+        paint.color = Color.BLACK
+        canvas.drawCircle(pointPosition.x, pointPosition.y, radius/12, paint)
 
         // Draw the text labels.
         val labelRadius = radius + RADIUS_OFFSET_LABEL
@@ -85,7 +88,7 @@ class FanView @JvmOverloads constructor(
             pointPosition.computeXYForSpeed(i, labelRadius)
 //            val label = resources.getString(i.label)  // TODO from res
             val label = resources.getString(i.label)
-            canvas.drawText(label, pointPosition.x, pointPosition.y, paintFan)
+            canvas.drawText(label, pointPosition.x, pointPosition.y, paintText)
         }
         // Draw arc
         val centerArcOffset: Float = 0.2F * radius
