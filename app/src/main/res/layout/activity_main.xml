@@ -14,7 +14,10 @@
         android:layout_weight="3"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        app:max_speed="200"
+        app:low_speed_color="@color/light_blue"
+        app:medium_speed_color="@android:color/holo_orange_light"/>
 
     <SeekBar
         android:id="@+id/speedometer_seekbar"

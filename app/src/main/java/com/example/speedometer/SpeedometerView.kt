@@ -18,8 +18,9 @@ class SpeedometerView @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val max: Int
-    private var progress: Int
+    val max: Int
+    var speedProgress: Int
+
     private var radius = 0.0f                   // Radius of the circle.
     private var handX: Float = 0f
     private var handY: Float = 0f
@@ -39,7 +40,7 @@ class SpeedometerView @JvmOverloads constructor(
         )
 
         max = typedArray.getInt(R.styleable.SpeedometerView_max_speed, 100)
-        progress = typedArray.getInt(R.styleable.SpeedometerView_speed_value, max/3)
+        speedProgress = typedArray.getInt(R.styleable.SpeedometerView_speed_value, max/3)
 
         lowColor = typedArray.getColor(R.styleable.SpeedometerView_low_speed_color, Color.GREEN)
         mediumColor =
@@ -72,17 +73,8 @@ class SpeedometerView @JvmOverloads constructor(
         typeface = Typeface.DEFAULT_BOLD
     }
 
-
-    private fun PointF.computeXYForSpeed(pos: Int, radius: Float) {
-        // Angles are in radians.
-        val startAngle = Math.PI * (9 / 8.0)
-        val angle = startAngle + pos * (Math.PI / 4)
-        x = (radius * cos(angle)).toFloat() + width / 2
-        y = (radius * sin(angle)).toFloat() + height / 2
-    }
-
-    fun setProgress(progress: Int) {
-        this.progress = progress
+    fun setProgress(speedProgress: Int) {
+        this.speedProgress = speedProgress
         invalidate()
     }
 
@@ -110,21 +102,21 @@ class SpeedometerView @JvmOverloads constructor(
             mainRect.right - offset,
             mainRect.bottom - offset
         )
-        canvas.drawArc(arcRect, -180f, 180f / max * progress, false, paintArc)
+        canvas.drawArc(arcRect, -180f, 180f / max * speedProgress, false, paintArc)
 
         // Draw the text label
-        canvas.drawText("$progress км/ч", mainRect.centerX(), mainRect.centerY() + 100f, paintText)
+        canvas.drawText("$speedProgress км/ч", mainRect.centerX(), mainRect.centerY() + 100f, paintText)
 
         // Draw hand
-        Log.d("SpeedView", "progress = $progress, max = $max")
-        paintHand.color = when(progress) {
+        Log.d("SpeedView", "speedProgress = $speedProgress, max = $max")
+        paintHand.color = when(speedProgress) {
             in 0 .. max/3 -> lowColor
             in max/3 .. max*2/3 -> mediumColor
             in max*2/3 .. max -> highColor
             else -> {throw RuntimeException("Error hand color")}
         }
         val handOffset = 50f
-        val angle = Math.PI * progress / max - Math.PI  // - Pi because start angle is 180
+        val angle = Math.PI * speedProgress / max - Math.PI  // - Pi because start angle is 180
         handX = width / 2 + ((radius - handOffset) * cos(angle)).toFloat()
         handY = height / 2 + ((radius - handOffset) * sin(angle)).toFloat()
         canvas.drawLine(

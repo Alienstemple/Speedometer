@@ -15,6 +15,8 @@ class MainActivity : AppCompatActivity() {
 
         val speedometerView = findViewById<SpeedometerView>(R.id.speedometer_view)
 
+        mainBinding.speedometerSeekbar.max = speedometerView.max
+        mainBinding.speedometerSeekbar.progress = speedometerView.speedProgress
         mainBinding.speedometerSeekbar.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
