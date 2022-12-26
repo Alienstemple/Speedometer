@@ -94,21 +94,22 @@ class SpeedometerView @JvmOverloads constructor(
         canvas.drawArc(arcRect, -180f, 180f / max * progress, false, paintArc)
 
         // Draw the text label
-        canvas.drawText("$progress км/ч", mainRect.centerX(), mainRect.centerY(), paintText)
+        canvas.drawText("$progress км/ч", mainRect.centerX(), mainRect.centerY() + 100f, paintText)
 
         // Draw hand
-//        handX = cos(Math.PI * progress / max).toFloat()
-//        handY = sin(Math.PI * progress / max).toFloat()
-        handX = cos(Math.PI).toFloat()
-        handY = sin(Math.PI).toFloat()
+        val handOffset = 50f
+        val angle = Math.PI * progress / max - Math.PI  // - Pi because start angle is 180
+        handX = width/2 + ((radius - handOffset) * cos(angle)).toFloat()
+        handY = height/2 + ((radius - handOffset) * sin(angle)).toFloat()
         canvas.drawLine(
-            mainRect.centerX(),
-            mainRect.centerY(),
-            mainRect.centerX() + handX,
-            mainRect.centerY() - handY,
+            (width/2).toFloat(),
+            (height/2).toFloat(),
+            handX,
+            handY,
             paintHand
         )
-        Log.d("SpeedLog", "Cos Pi = ${cos(Math.PI / 4).toFloat()}")
+        Log.d("SpeedLog", "x = ${mainRect.centerX() + cos(Math.PI / 4).toFloat()} y = ${mainRect.centerY() - sin(Math.PI / 4).toFloat()}")
+
         Log.d("SpeedLog", "${mainRect.centerX()}, ${mainRect.centerY()}, ${mainRect.centerX() + handX}, ${mainRect.centerY() + handY}")
     }
 }
