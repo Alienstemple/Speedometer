@@ -106,6 +106,10 @@ class SpeedometerView @JvmOverloads constructor(
 
         // Draw the text label
         canvas.drawText("$speedProgress км/ч", mainRect.centerX(), mainRect.centerY() + 100f, paintText)
+        val maxText = "max $max км/ч"
+        val maxBounds = Rect()
+        paintText.getTextBounds(maxText, 0, maxText.length, maxBounds)
+        canvas.drawText(maxText, mainRect.centerX(), mainRect.centerY() + 100f + maxBounds.height(), paintText)
 
         // Draw hand
         Log.d("SpeedView", "speedProgress = $speedProgress, max = $max")
