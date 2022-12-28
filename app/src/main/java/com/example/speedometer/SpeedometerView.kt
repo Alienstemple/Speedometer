@@ -73,6 +73,21 @@ class SpeedometerView @JvmOverloads constructor(
         typeface = Typeface.DEFAULT_BOLD
     }
 
+    private var mainRect = RectF(
+        (width / 2).toFloat() - radius,
+        (height / 2).toFloat() - radius,
+        (width / 2).toFloat() + radius,
+        (height / 2).toFloat() + radius
+    )
+
+    private val offset = 50f
+    private var arcRect = RectF()
+
+    private val maxText = "max $max км/ч"
+    private val maxBounds = Rect()
+    private val handOffset = 50f
+    private var angle = 0.0
+
     fun setProgress(speedProgress: Int) {
         this.speedProgress = speedProgress
         invalidate()
@@ -80,34 +95,31 @@ class SpeedometerView @JvmOverloads constructor(
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         radius = (min(width, height) * 0.4).toFloat()
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        val mainRect = RectF(
+        mainRect = RectF(
             (width / 2).toFloat() - radius,
             (height / 2).toFloat() - radius,
             (width / 2).toFloat() + radius,
             (height / 2).toFloat() + radius
         )
-        // Draw the dial.
-        canvas.drawCircle(mainRect.centerX(), mainRect.centerY(), radius, paint)
-
-        //  Draw arc
-        val offset = 50f
-        val arcRect = RectF(
+        arcRect = RectF(
             mainRect.left + offset,
             mainRect.top + offset,
             mainRect.right - offset,
             mainRect.bottom - offset
         )
+        angle = Math.PI * speedProgress / max - Math.PI  // - Pi because start angle is 180
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        // Draw the dial.
+        canvas.drawCircle(mainRect.centerX(), mainRect.centerY(), radius, paint)
+
+        //  Draw arc
         canvas.drawArc(arcRect, -180f, 180f / max * speedProgress, false, paintArc)
 
         // Draw the text label
         canvas.drawText("$speedProgress км/ч", mainRect.centerX(), mainRect.centerY() + 100f, paintText)
-        val maxText = "max $max км/ч"
-        val maxBounds = Rect()
         paintText.getTextBounds(maxText, 0, maxText.length, maxBounds)
         canvas.drawText(maxText, mainRect.centerX(), mainRect.centerY() + 100f + maxBounds.height(), paintText)
 
@@ -119,8 +131,6 @@ class SpeedometerView @JvmOverloads constructor(
             in max*2/3 .. max -> highColor
             else -> {throw RuntimeException("Error hand color")}
         }
-        val handOffset = 50f
-        val angle = Math.PI * speedProgress / max - Math.PI  // - Pi because start angle is 180
         handX = width / 2 + ((radius - handOffset) * cos(angle)).toFloat()
         handY = height / 2 + ((radius - handOffset) * sin(angle)).toFloat()
         canvas.drawLine(
