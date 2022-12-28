@@ -7,4 +7,6 @@
         <attr name="medium_speed_color" format="color"/>
         <attr name="high_speed_color" format="color"/>
     </declare-styleable>
+
+    <attr name="SpeedometerStyle" format="reference"/>
 </resources>

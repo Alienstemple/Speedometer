@@ -12,5 +12,18 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="SpeedometerStyle">@style/DefaultSpeedometerStyle</item>
+    </style>
+    
+    <style name="MySpeedometerStyle">
+        <item name="low_speed_color">@color/teal_200</item>
+    </style>
+
+    <style name="DefaultSpeedometerStyle">
+        <item name="low_speed_color">@color/white</item>
+    </style>
+
+    <style name="BasicSpeedometerStyle">
+        <item name="low_speed_color">@android:color/darker_gray</item>
     </style>
 </resources>

@@ -14,8 +14,8 @@ import kotlin.math.sin
 class SpeedometerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-    defStyleRes: Int = 0
+    defStyleAttr: Int = R.attr.SpeedometerStyle,
+    defStyleRes: Int = R.style.BasicSpeedometerStyle
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
 
     val max: Int
