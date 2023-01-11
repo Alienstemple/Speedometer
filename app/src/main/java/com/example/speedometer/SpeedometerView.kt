@@ -53,12 +53,7 @@ class SpeedometerView @JvmOverloads constructor(
         typeface = Typeface.DEFAULT_BOLD
     }
 
-    private var mainRect = RectF(
-        (width / 2).toFloat() - radius,
-        (height / 2).toFloat() - radius,
-        (width / 2).toFloat() + radius,
-        (height / 2).toFloat() + radius
-    )
+    private val mainRect = RectF()
 
     private val offset = 50f
     private var arcRect = RectF()
@@ -101,12 +96,13 @@ class SpeedometerView @JvmOverloads constructor(
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         radius = (min(width, height) * 0.4).toFloat()
-        mainRect = RectF(
-            (width / 2).toFloat() - radius,
-            (height / 2).toFloat() - radius,
-            (width / 2).toFloat() + radius,
-            (height / 2).toFloat() + radius
-        )
+
+        with(mainRect) {  // Initialize mainRect
+            left = (width / 2).toFloat() - radius
+            top = (height / 2).toFloat() - radius
+            right = (width / 2).toFloat() + radius
+            bottom = (height / 2).toFloat() + radius
+        }
         arcRect = RectF(
             mainRect.left + offset,
             mainRect.top + offset,
