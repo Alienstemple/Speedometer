@@ -18,8 +18,8 @@ class SpeedometerView @JvmOverloads constructor(
     defStyleRes: Int = R.style.BasicSpeedometerStyle
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
 
-    val max: Int
-    var speedProgress: Int
+    private val max: Int
+    private var speedProgress: Int
 
     private var radius = 0.0f                   // Radius of the circle.
     private var handX: Float = 0f
@@ -29,26 +29,6 @@ class SpeedometerView @JvmOverloads constructor(
     private val lowColor: Int
     private val mediumColor: Int
     private val highColor: Int
-
-    init {
-        isClickable = true
-        val typedArray = context.obtainStyledAttributes(
-            attrs,
-            R.styleable.SpeedometerView,
-            defStyleAttr,
-            defStyleRes
-        )
-
-        max = typedArray.getInt(R.styleable.SpeedometerView_max_speed, 100)
-        speedProgress = typedArray.getInt(R.styleable.SpeedometerView_speed_value, max/3)
-
-        lowColor = typedArray.getColor(R.styleable.SpeedometerView_low_speed_color, Color.GREEN)
-        mediumColor =
-            typedArray.getColor(R.styleable.SpeedometerView_medium_speed_color, Color.YELLOW)
-        highColor = typedArray.getColor(R.styleable.SpeedometerView_high_speed_color, Color.RED)
-
-        typedArray.recycle()
-    }
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -83,15 +63,41 @@ class SpeedometerView @JvmOverloads constructor(
     private val offset = 50f
     private var arcRect = RectF()
 
-    private val maxText = "max $max км/ч"
+//    private val maxText = "max $max км/ч"  // FIXME max
+    private val maxText = "max км/ч"
     private val maxBounds = Rect()
     private val handOffset = 50f
     private var angle = 0.0
+
+    init {
+        isClickable = true
+        val typedArray = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.SpeedometerView,
+            defStyleAttr,
+            defStyleRes
+        )
+
+        max = typedArray.getInt(R.styleable.SpeedometerView_max_speed, 100)
+        speedProgress = typedArray.getInt(R.styleable.SpeedometerView_speed_value, max/3)
+
+        lowColor = typedArray.getColor(R.styleable.SpeedometerView_low_speed_color, Color.GREEN)
+        mediumColor =
+            typedArray.getColor(R.styleable.SpeedometerView_medium_speed_color, Color.YELLOW)
+        highColor = typedArray.getColor(R.styleable.SpeedometerView_high_speed_color, Color.RED)
+
+        typedArray.recycle()
+    }
 
     fun setProgress(speedProgress: Int) {
         this.speedProgress = speedProgress
         invalidate()
     }
+
+//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+//        setMeasuredDimension(width, height)
+//    }
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         radius = (min(width, height) * 0.4).toFloat()
@@ -131,6 +137,7 @@ class SpeedometerView @JvmOverloads constructor(
             in max*2/3 .. max -> highColor
             else -> {throw RuntimeException("Error hand color")}
         }
+        angle = Math.PI * speedProgress / max - Math.PI  // - Pi because start angle is 180  // Must be calculated every time
         handX = width / 2 + ((radius - handOffset) * cos(angle)).toFloat()
         handY = height / 2 + ((radius - handOffset) * sin(angle)).toFloat()
         canvas.drawLine(
