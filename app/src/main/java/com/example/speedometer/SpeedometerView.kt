@@ -6,9 +6,11 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
+import java.lang.StrictMath.max
 import java.lang.StrictMath.min
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.properties.Delegates
 
 
 class SpeedometerView @JvmOverloads constructor(
@@ -59,9 +61,14 @@ class SpeedometerView @JvmOverloads constructor(
     private var arcRect = RectF()
 
     private val maxText: String  // Will be set later
-    private val maxBounds = Rect()
+    private val speedProgressText: String
+    private val maxTextBounds = Rect()
+    private val progressTextBounds = Rect()
     private val handOffset = 50f
     private var angle = 0.0
+
+    private val minWidth: Int
+    private val minHeight: Int
 
     init {
         isClickable = true
@@ -75,6 +82,16 @@ class SpeedometerView @JvmOverloads constructor(
         max = typedArray.getInt(R.styleable.SpeedometerView_max_speed, 100)
         maxText = "max $max км/ч"
         speedProgress = typedArray.getInt(R.styleable.SpeedometerView_speed_value, max / 3)
+        speedProgressText = "$speedProgress км/ч"
+
+        paintText.getTextBounds(maxText, 0, maxText.length, maxTextBounds)
+        paintText.getTextBounds(speedProgressText, 0, speedProgressText.length, progressTextBounds)
+
+        minWidth = max(maxTextBounds.width(), progressTextBounds.width()) * 6
+        minHeight = (maxTextBounds.height() + progressTextBounds.height()) * 6
+
+        Log.v("Speed", " min w $minWidth")
+        Log.v("Speed", " min h $minHeight")
 
         lowColor = typedArray.getColor(R.styleable.SpeedometerView_low_speed_color, Color.GREEN)
         mediumColor =
@@ -100,11 +117,11 @@ class SpeedometerView @JvmOverloads constructor(
 //        val desiredHeight = suggestedMinimumHeight + paddingTop + paddingBottom
 
         val desiredWidth =
-            1000 + paddingLeft + paddingRight  // FIXME suggested too small
-        val desiredHeight = 1000 + paddingTop + paddingBottom
+            minWidth + paddingLeft + paddingRight  // FIXME suggested too small
+        val desiredHeight = minHeight + paddingTop + paddingBottom
 
-        Log.v("Speed", " desired w $desiredWidth")
-        Log.v("Speed", " desired h $desiredHeight")
+        Log.v("Speed", " desired w $minWidth")
+        Log.v("Speed", " desired h $minHeight")
 
         setMeasuredDimension(
             measureDimension(desiredWidth, widthMeasureSpec),
@@ -140,16 +157,16 @@ class SpeedometerView @JvmOverloads constructor(
 
         // Draw the text label
         canvas.drawText(
-            "$speedProgress км/ч",
+            speedProgressText,
             mainRect.centerX(),
             mainRect.centerY() + 100f,
             paintText
         )
-        paintText.getTextBounds(maxText, 0, maxText.length, maxBounds)
+        paintText.getTextBounds(maxText, 0, maxText.length, maxTextBounds)
         canvas.drawText(
             maxText,
             mainRect.centerX(),
-            mainRect.centerY() + 100f + maxBounds.height(),
+            mainRect.centerY() + 100f + maxTextBounds.height(),
             paintText
         )
 
