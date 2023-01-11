@@ -18,8 +18,8 @@ class SpeedometerView @JvmOverloads constructor(
     defStyleRes: Int = R.style.BasicSpeedometerStyle
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val max: Int
-    private var speedProgress: Int
+    val max: Int  // Must be public!
+    var speedProgress: Int   // Must be public!
 
     private var radius = 0.0f                   // Radius of the circle.
     private var handX: Float = 0f
@@ -63,8 +63,7 @@ class SpeedometerView @JvmOverloads constructor(
     private val offset = 50f
     private var arcRect = RectF()
 
-//    private val maxText = "max $max км/ч"  // FIXME max
-    private val maxText = "max км/ч"
+    private val maxText: String  // Will be set later
     private val maxBounds = Rect()
     private val handOffset = 50f
     private var angle = 0.0
@@ -79,6 +78,7 @@ class SpeedometerView @JvmOverloads constructor(
         )
 
         max = typedArray.getInt(R.styleable.SpeedometerView_max_speed, 100)
+        maxText = "max $max км/ч"
         speedProgress = typedArray.getInt(R.styleable.SpeedometerView_speed_value, max/3)
 
         lowColor = typedArray.getColor(R.styleable.SpeedometerView_low_speed_color, Color.GREEN)
