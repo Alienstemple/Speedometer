@@ -12,6 +12,8 @@
         style="@style/MySpeedometerStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="@dimen/speed_size"
+        android:minHeight="@dimen/speed_size"
         android:layout_margin="@dimen/speed_margin"
         android:padding="@dimen/speed_padding"
         app:max_speed="200"

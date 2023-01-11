@@ -117,16 +117,26 @@ class SpeedometerView @JvmOverloads constructor(
 //        val desiredHeight = suggestedMinimumHeight + paddingTop + paddingBottom
 
         val desiredWidth =
-            minWidth + paddingLeft + paddingRight  // FIXME suggested too small
-        val desiredHeight = minHeight + paddingTop + paddingBottom
+            max(minWidth + suggestedMinimumWidth, minimumWidth) + paddingLeft + paddingRight
+        val desiredHeight =
+            max(minHeight + suggestedMinimumHeight, minimumHeight) + paddingTop + paddingBottom
+
+        Log.v("Speed", " from xml w $minimumWidth")
+        Log.v("Speed", " from xml h $minimumHeight")
 
         Log.v("Speed", " desired w $minWidth")
         Log.v("Speed", " desired h $minHeight")
 
+//        setMeasuredDimension(  // works same as resolveSize!
+//            measureDimension(desiredWidth, widthMeasureSpec),
+//            measureDimension(desiredHeight, heightMeasureSpec)
+//        )
+
         setMeasuredDimension(
-            measureDimension(desiredWidth, widthMeasureSpec),
-            measureDimension(desiredHeight, heightMeasureSpec)
+            resolveSize(desiredWidth, widthMeasureSpec),
+            resolveSize(desiredHeight, heightMeasureSpec)
         )
+        Log.d("Speed", "Applied: $measuredWidth $measuredHeight")
     }
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
@@ -210,6 +220,7 @@ class SpeedometerView @JvmOverloads constructor(
                 desiredSize
             }
         }
+        Log.v("Speed", " result $result")
         return result
     }
 }
