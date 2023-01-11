@@ -93,7 +93,7 @@ class SpeedometerView @JvmOverloads constructor(
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
         Log.v("Speed", "onMeasure w " + MeasureSpec.toString(widthMeasureSpec))
-        Log.v("Speed",  "onMeasure h " + MeasureSpec.toString(heightMeasureSpec))
+        Log.v("Speed", "onMeasure h " + MeasureSpec.toString(heightMeasureSpec))
 
 //        val desiredWidth =
 //            suggestedMinimumWidth + paddingLeft + paddingRight  // FIXME suggested too small
