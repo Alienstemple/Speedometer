@@ -13,23 +13,22 @@ class MainActivity : AppCompatActivity() {
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
-        val speedometerView = findViewById<SpeedometerView>(R.id.speedometer_view)
+        with(mainBinding) {
+            speedometerSeekbar.max = speedometerView.max
+            speedometerSeekbar.progress = speedometerView.speedProgress
+            speedometerSeekbar.setOnSeekBarChangeListener(object :
+                SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                    speedometerView.setProgress(p1)
+                }
 
-        mainBinding.speedometerSeekbar.max = speedometerView.max
-        mainBinding.speedometerSeekbar.progress = speedometerView.speedProgress
-        mainBinding.speedometerSeekbar.setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                speedometerView.setProgress(p1)
-            }
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+                }
 
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-            }
+                override fun onStopTrackingTouch(p0: SeekBar?) {
 
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-
-            }
-
-        })
+                }
+            })
+        }
     }
 }
