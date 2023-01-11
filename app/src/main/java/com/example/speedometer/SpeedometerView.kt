@@ -74,7 +74,7 @@ class SpeedometerView @JvmOverloads constructor(
 
         max = typedArray.getInt(R.styleable.SpeedometerView_max_speed, 100)
         maxText = "max $max км/ч"
-        speedProgress = typedArray.getInt(R.styleable.SpeedometerView_speed_value, max/3)
+        speedProgress = typedArray.getInt(R.styleable.SpeedometerView_speed_value, max / 3)
 
         lowColor = typedArray.getColor(R.styleable.SpeedometerView_low_speed_color, Color.GREEN)
         mediumColor =
@@ -89,10 +89,28 @@ class SpeedometerView @JvmOverloads constructor(
         invalidate()
     }
 
-//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-//        setMeasuredDimension(width, height)
-//    }
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        Log.v("Speed", "onMeasure w " + MeasureSpec.toString(widthMeasureSpec))
+        Log.v("Speed",  "onMeasure h " + MeasureSpec.toString(heightMeasureSpec))
+
+//        val desiredWidth =
+//            suggestedMinimumWidth + paddingLeft + paddingRight  // FIXME suggested too small
+//        val desiredHeight = suggestedMinimumHeight + paddingTop + paddingBottom
+
+        val desiredWidth =
+            1000 + paddingLeft + paddingRight  // FIXME suggested too small
+        val desiredHeight = 1000 + paddingTop + paddingBottom
+
+        Log.v("Speed", " desired w $desiredWidth")
+        Log.v("Speed", " desired h $desiredHeight")
+
+        setMeasuredDimension(
+            measureDimension(desiredWidth, widthMeasureSpec),
+            measureDimension(desiredHeight, heightMeasureSpec)
+        )
+    }
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         radius = (min(width, height) * 0.4).toFloat()
@@ -121,19 +139,32 @@ class SpeedometerView @JvmOverloads constructor(
         canvas.drawArc(arcRect, -180f, 180f / max * speedProgress, false, paintArc)
 
         // Draw the text label
-        canvas.drawText("$speedProgress км/ч", mainRect.centerX(), mainRect.centerY() + 100f, paintText)
+        canvas.drawText(
+            "$speedProgress км/ч",
+            mainRect.centerX(),
+            mainRect.centerY() + 100f,
+            paintText
+        )
         paintText.getTextBounds(maxText, 0, maxText.length, maxBounds)
-        canvas.drawText(maxText, mainRect.centerX(), mainRect.centerY() + 100f + maxBounds.height(), paintText)
+        canvas.drawText(
+            maxText,
+            mainRect.centerX(),
+            mainRect.centerY() + 100f + maxBounds.height(),
+            paintText
+        )
 
         // Draw hand
         Log.d("SpeedView", "speedProgress = $speedProgress, max = $max")
-        paintHand.color = when(speedProgress) {
-            in 0 .. max/3 -> lowColor
-            in max/3 .. max*2/3 -> mediumColor
-            in max*2/3 .. max -> highColor
-            else -> {throw RuntimeException("Error hand color")}
+        paintHand.color = when (speedProgress) {
+            in 0..max / 3 -> lowColor
+            in max / 3..max * 2 / 3 -> mediumColor
+            in max * 2 / 3..max -> highColor
+            else -> {
+                throw RuntimeException("Error hand color")
+            }
         }
-        angle = Math.PI * speedProgress / max - Math.PI  // - Pi because start angle is 180  // Must be calculated every time
+        angle =
+            Math.PI * speedProgress / max - Math.PI  // - Pi because start angle is 180  // Must be calculated every time
         handX = width / 2 + ((radius - handOffset) * cos(angle)).toFloat()
         handY = height / 2 + ((radius - handOffset) * sin(angle)).toFloat()
         canvas.drawLine(
@@ -143,5 +174,25 @@ class SpeedometerView @JvmOverloads constructor(
             handY,
             paintHand
         )
+    }
+
+    private fun measureDimension(desiredSize: Int, measureSpec: Int): Int {
+        val mode = MeasureSpec.getMode(measureSpec)  // get values from encoded spec
+        val size = MeasureSpec.getSize(measureSpec)
+        var result = when (mode) {
+            MeasureSpec.EXACTLY -> {
+                size
+            }
+            MeasureSpec.AT_MOST -> {
+                min(size, desiredSize)
+            }
+            MeasureSpec.UNSPECIFIED -> {
+                desiredSize
+            }
+            else -> {
+                desiredSize
+            }
+        }
+        return result
     }
 }
