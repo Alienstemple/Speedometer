@@ -117,15 +117,15 @@ class SpeedometerView @JvmOverloads constructor(
 //        val desiredHeight = suggestedMinimumHeight + paddingTop + paddingBottom
 
         val desiredWidth =
-            max(minWidth + suggestedMinimumWidth, minimumWidth) + paddingLeft + paddingRight
+            max(minWidth, suggestedMinimumWidth) // suggested contains paddings
         val desiredHeight =
-            max(minHeight + suggestedMinimumHeight, minimumHeight) + paddingTop + paddingBottom
+            max(minHeight, suggestedMinimumHeight)
 
-        Log.v("Speed", " from xml w $minimumWidth")
-        Log.v("Speed", " from xml h $minimumHeight")
+        Log.v("Speed", " suggested w $minimumWidth")
+        Log.v("Speed", " suggested h $minimumHeight")
 
-        Log.v("Speed", " desired w $minWidth")
-        Log.v("Speed", " desired h $minHeight")
+        Log.v("Speed", " our w $minWidth")
+        Log.v("Speed", " our h $minHeight")
 
         setMeasuredDimension(  // works same as resolveSize!
             measureDimension(desiredWidth, widthMeasureSpec),
