@@ -88,8 +88,8 @@ class SpeedometerView @JvmOverloads constructor(
         paintText.getTextBounds(maxText, 0, maxText.length, maxTextBounds)
         paintText.getTextBounds(speedProgressText, 0, speedProgressText.length, progressTextBounds)
 
-        minWidth = max(maxTextBounds.width(), progressTextBounds.width()) * 6
-        minHeight = (maxTextBounds.height() + progressTextBounds.height()) * 6
+        minWidth = max(maxTextBounds.width(), progressTextBounds.width()) * 6 + paddingLeft + paddingRight
+        minHeight = (maxTextBounds.height() + progressTextBounds.height()) * 6 + paddingTop + paddingBottom
 
         Log.v("Speed", " min w $minWidth")
         Log.v("Speed", " min h $minHeight")

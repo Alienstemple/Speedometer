@@ -16,7 +16,7 @@
         android:paddingLeft="@dimen/speed_padding"
         android:paddingTop="@dimen/speed_padding"
         android:paddingBottom="@dimen/speed_padding"
-        android:paddingRight="60dp"
+        android:paddingRight="@dimen/speed_padding_right"
         android:minHeight="@dimen/speed_size"
         app:max_speed="200"
         app:medium_speed_color="@android:color/holo_orange_light"

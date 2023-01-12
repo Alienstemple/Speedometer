@@ -3,5 +3,6 @@
     <dimen name="seek_bar_margin">30dp</dimen>
     <dimen name="speed_margin">10dp</dimen>
     <dimen name="speed_padding">10dp</dimen>
+    <dimen name="speed_padding_right">60dp</dimen>
     <dimen name="speed_size">300dp</dimen>
 </resources>
