@@ -127,14 +127,9 @@ class SpeedometerView @JvmOverloads constructor(
         Log.v("Speed", " desired w $minWidth")
         Log.v("Speed", " desired h $minHeight")
 
-//        setMeasuredDimension(  // works same as resolveSize!
-//            measureDimension(desiredWidth, widthMeasureSpec),
-//            measureDimension(desiredHeight, heightMeasureSpec)
-//        )
-
-        setMeasuredDimension(
-            resolveSize(desiredWidth, widthMeasureSpec),
-            resolveSize(desiredHeight, heightMeasureSpec)
+        setMeasuredDimension(  // works same as resolveSize!
+            measureDimension(desiredWidth, widthMeasureSpec),
+            measureDimension(desiredHeight, heightMeasureSpec)
         )
         Log.d("Speed", "Applied: $measuredWidth $measuredHeight")
     }
@@ -143,10 +138,10 @@ class SpeedometerView @JvmOverloads constructor(
         radius = (min(width, height) * 0.4).toFloat()
 
         with(mainRect) {  // Initialize mainRect
-            left = (width / 2).toFloat() - radius
-            top = (height / 2).toFloat() - radius
-            right = (width / 2).toFloat() + radius
-            bottom = (height / 2).toFloat() + radius
+            left = (width / 2).toFloat() - radius + paddingLeft
+            top = (height / 2).toFloat() - radius + paddingTop
+            right = (width / 2).toFloat() + radius - paddingRight
+            bottom = (height / 2).toFloat() + radius - paddingBottom
         }
         arcRect = RectF(
             mainRect.left + offset,
@@ -159,6 +154,14 @@ class SpeedometerView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+
+        // Draw paddings
+        canvas.drawLine(paddingLeft.toFloat(), 0f, paddingLeft.toFloat(), height.toFloat(), paintHand)
+        canvas.drawLine(0f, paddingTop.toFloat(),width.toFloat(),  paddingTop.toFloat(), paintHand)
+        canvas.drawLine(width - paddingRight.toFloat(), 0f, width - paddingRight.toFloat(), height.toFloat(), paintHand)
+        canvas.drawLine(0f, height - paddingBottom.toFloat(), width.toFloat(),  height - paddingBottom.toFloat(), paintHand)
+
+
         // Draw the dial.
         canvas.drawCircle(mainRect.centerX(), mainRect.centerY(), radius, paint)
 
