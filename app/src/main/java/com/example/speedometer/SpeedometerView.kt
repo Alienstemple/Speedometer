@@ -59,7 +59,7 @@ class SpeedometerView @JvmOverloads constructor(
     private val mainRect = RectF()
 
     private val offset = 50f
-    private var arcRect = RectF()
+    private val arcRect = RectF()
 
     private val maxText: String  // Will be set later
     private var speedProgressText: String
@@ -152,12 +152,12 @@ class SpeedometerView @JvmOverloads constructor(
             right = (width / 2).toFloat() + radius - paddingRight
             bottom = (height / 2).toFloat() + radius - paddingBottom
         }
-        arcRect = RectF(
-            mainRect.left + offset,
-            mainRect.top + offset,
-            mainRect.right - offset,
-            mainRect.bottom - offset
-        )
+        with(arcRect) {
+            left = mainRect.centerX() - radius + offset
+            top = mainRect.centerY() - radius + offset
+            right = mainRect.centerX() + radius - offset
+            bottom = mainRect.centerY() + radius - offset
+        }
         angle = Math.PI * speedProgress / max - Math.PI  // - Pi because start angle is 180
     }
 
