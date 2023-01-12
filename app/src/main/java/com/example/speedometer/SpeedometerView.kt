@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
+import kotlinx.parcelize.Parcelize
 import java.lang.StrictMath.max
 import java.lang.StrictMath.min
 import kotlin.math.cos
@@ -107,7 +108,8 @@ class SpeedometerView @JvmOverloads constructor(
     }
 
     override fun onSaveInstanceState(): Parcelable? {
-        return super.onSaveInstanceState()
+        val superState = super.onSaveInstanceState()
+        return SavedState(superState, speedProgress)
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
@@ -239,7 +241,7 @@ class SpeedometerView @JvmOverloads constructor(
         return result
     }
 
-//    @Parcelize   // TODO import
+    @Parcelize   // TODO import
     class SavedState(val superSavedState: Parcelable?, val progress: Int) :
             View.BaseSavedState(superSavedState), Parcelable
 }
