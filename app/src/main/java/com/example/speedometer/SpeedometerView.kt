@@ -125,10 +125,6 @@ class SpeedometerView @JvmOverloads constructor(
         Log.v("Speed", "onMeasure w " + MeasureSpec.toString(widthMeasureSpec))
         Log.v("Speed", "onMeasure h " + MeasureSpec.toString(heightMeasureSpec))
 
-//        val desiredWidth =
-//            suggestedMinimumWidth + paddingLeft + paddingRight  // FIXME suggested too small
-//        val desiredHeight = suggestedMinimumHeight + paddingTop + paddingBottom
-
         val desiredWidth =
             max(minWidth, suggestedMinimumWidth) // suggested contains paddings
         val desiredHeight =
@@ -209,11 +205,11 @@ class SpeedometerView @JvmOverloads constructor(
         }
         angle =
             Math.PI * speedProgress / max - Math.PI  // - Pi because start angle is 180  // Must be calculated every time
-        handX = width / 2 + ((radius - handOffset) * cos(angle)).toFloat()
-        handY = height / 2 + ((radius - handOffset) * sin(angle)).toFloat()
+        handX = arcRect.centerX() + ((radius - handOffset) * cos(angle)).toFloat()
+        handY = arcRect.centerY() + ((radius - handOffset) * sin(angle)).toFloat()
         canvas.drawLine(
-            (width / 2).toFloat(),
-            (height / 2).toFloat(),
+            arcRect.centerX(),  // на основе arcRect
+            arcRect.centerY(),
             handX,
             handY,
             paintHand
