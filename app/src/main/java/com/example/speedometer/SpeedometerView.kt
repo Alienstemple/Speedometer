@@ -2,6 +2,7 @@ package com.example.speedometer
 
 import android.content.Context
 import android.graphics.*
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -10,7 +11,6 @@ import java.lang.StrictMath.max
 import java.lang.StrictMath.min
 import kotlin.math.cos
 import kotlin.math.sin
-import kotlin.properties.Delegates
 
 
 class SpeedometerView @JvmOverloads constructor(
@@ -61,7 +61,7 @@ class SpeedometerView @JvmOverloads constructor(
     private var arcRect = RectF()
 
     private val maxText: String  // Will be set later
-    private val speedProgressText: String
+    private var speedProgressText: String
     private val maxTextBounds = Rect()
     private val progressTextBounds = Rect()
     private val handOffset = 50f
@@ -104,6 +104,17 @@ class SpeedometerView @JvmOverloads constructor(
     fun setProgress(speedProgress: Int) {
         this.speedProgress = speedProgress
         invalidate()
+    }
+
+    override fun onSaveInstanceState(): Parcelable? {
+        return super.onSaveInstanceState()
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        state as SavedState
+        super.onRestoreInstanceState(state.superSavedState)
+        speedProgress = state.progress
+        invalidate()   // TODO why?
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -169,6 +180,7 @@ class SpeedometerView @JvmOverloads constructor(
         canvas.drawArc(arcRect, -180f, 180f / max * speedProgress, false, paintArc)
 
         // Draw the text label
+        speedProgressText = "$speedProgress км/ч"
         canvas.drawText(
             speedProgressText,
             mainRect.centerX(),
@@ -226,4 +238,13 @@ class SpeedometerView @JvmOverloads constructor(
         Log.v("Speed", " result $result")
         return result
     }
+
+//    @Parcelize   // TODO import
+    class SavedState(val superSavedState: Parcelable?, val progress: Int) :
+            View.BaseSavedState(superSavedState), Parcelable
 }
+
+
+
+
+
