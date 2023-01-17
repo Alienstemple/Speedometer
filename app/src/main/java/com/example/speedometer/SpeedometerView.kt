@@ -81,7 +81,7 @@ class SpeedometerView @JvmOverloads constructor(
         )
 
         max = typedArray.getInt(R.styleable.SpeedometerView_max_speed, 100)
-        maxText = "max $max км/ч"
+        maxText = "maximum velocity $max км/ч"
         speedProgress = typedArray.getInt(R.styleable.SpeedometerView_speed_value, max / 3)
         speedProgressText = "$speedProgress км/ч"
 
