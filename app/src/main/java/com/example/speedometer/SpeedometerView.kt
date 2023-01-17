@@ -68,8 +68,8 @@ class SpeedometerView @JvmOverloads constructor(
     private val handOffset = 50f
     private var angle = 0.0
 
-    private val minWidth: Int
-    private val minHeight: Int
+    private var minWidth: Int
+    private var minHeight: Int
 
     init {
         isClickable = true
@@ -120,31 +120,53 @@ class SpeedometerView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        Log.d("Speed","onMeasure called. Paddings: $paddingLeft $paddingTop $paddingRight $paddingBottom")
+
+        radius = (min(width - paddingLeft - paddingRight, height - paddingTop - paddingBottom)/2).toFloat()
+        Log.d("Speed", "Radius in onMeasure: $radius")
 
         Log.v("Speed", "onMeasure w " + MeasureSpec.toString(widthMeasureSpec))
         Log.v("Speed", "onMeasure h " + MeasureSpec.toString(heightMeasureSpec))
 
+        paintText.getTextBounds(maxText, 0, maxText.length, maxTextBounds)
+        paintText.getTextBounds(speedProgressText, 0, speedProgressText.length, progressTextBounds)
+
+        minWidth = max(maxTextBounds.width(), progressTextBounds.width()) * 6 + paddingLeft + paddingRight
+        minHeight = (maxTextBounds.height() + progressTextBounds.height()) * 6 + paddingTop + paddingBottom
+
         val desiredWidth =
-            max(minWidth, suggestedMinimumWidth) // suggested contains paddings
+            max(minWidth, suggestedMinimumWidth) // suggested не учитывает paddings!
         val desiredHeight =
             max(minHeight, suggestedMinimumHeight)
 
-        Log.v("Speed", " suggested w $minimumWidth")
-        Log.v("Speed", " suggested h $minimumHeight")
+        Log.v("Speed", " suggested w $suggestedMinimumWidth")
+        Log.v("Speed", " suggested h $suggestedMinimumHeight")
 
-        Log.v("Speed", " our w $minWidth")
-        Log.v("Speed", " our h $minHeight")
+        Log.v("Speed", " our minWidth $minWidth")
+        Log.v("Speed", " our minHeight $minHeight")
 
+        Log.v("Speed", " desired w $minWidth")
+        Log.v("Speed", " desired h $minHeight")
+
+//        setMeasuredDimension(  // works same as resolveSize!
+//            measureDimension(desiredWidth, widthMeasureSpec),
+//            measureDimension(desiredHeight, heightMeasureSpec)
+//        )
         setMeasuredDimension(  // works same as resolveSize!
-            measureDimension(desiredWidth, widthMeasureSpec),
-            measureDimension(desiredHeight, heightMeasureSpec)
+            resolveSizeAndState(desiredWidth, widthMeasureSpec, 0),  // 0 т к нет child
+            resolveSizeAndState(desiredHeight, heightMeasureSpec, 0)
         )
         Log.d("Speed", "Applied: $measuredWidth $measuredHeight")
+        Log.d("Speed", "Got from resolve w ${resolveSizeAndState(desiredWidth, widthMeasureSpec, 0)}")
+        Log.d("Speed", "Got from resolve h ${resolveSizeAndState(desiredHeight, heightMeasureSpec, 0)}")
     }
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
-        radius = (min(width, height) * 0.4).toFloat()
+        Log.d("Speed", "onSizeChanged called")
+        radius = (min(width - paddingLeft - paddingRight, height - paddingTop - paddingBottom)/2).toFloat()
+        Log.d("Speed", "Radius in onSizeChanged: $radius")
 
         with(mainRect) {  // Initialize mainRect
             left = (width / 2).toFloat() - radius + paddingLeft
@@ -152,6 +174,7 @@ class SpeedometerView @JvmOverloads constructor(
             right = (width / 2).toFloat() + radius - paddingRight
             bottom = (height / 2).toFloat() + radius - paddingBottom
         }
+        Log.d("Speed", "MainRect: $left $top $right $bottom")
         with(arcRect) {
             left = mainRect.centerX() - radius + offset
             top = mainRect.centerY() - radius + offset
@@ -199,7 +222,9 @@ class SpeedometerView @JvmOverloads constructor(
             in 0..max / 3 -> lowColor
             in max / 3..max * 2 / 3 -> mediumColor
             in max * 2 / 3..max -> highColor
-            else -> {
+            else -> { paintText.getTextBounds(maxText, 0, maxText.length, maxTextBounds)
+        paintText.getTextBounds(speedProgressText, 0, speedProgressText.length, progressTextBounds)
+
                 throw RuntimeException("Error hand color")
             }
         }

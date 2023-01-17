@@ -13,6 +13,11 @@ class MainActivity : AppCompatActivity() {
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
+        mainBinding.changePaddingBtn.setOnClickListener {
+            mainBinding.speedometerView.setPadding(0, 0, 0, 0)
+            mainBinding.speedometerView.requestLayout()
+        }
+
         with(mainBinding) {
             speedometerSeekbar.max = speedometerView.max
             speedometerSeekbar.progress = speedometerView.speedProgress
