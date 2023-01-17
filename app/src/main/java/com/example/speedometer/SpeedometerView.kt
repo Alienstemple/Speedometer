@@ -133,8 +133,11 @@ class SpeedometerView @JvmOverloads constructor(
         paintText.getTextBounds(maxText, 0, maxText.length, maxTextBounds)
         paintText.getTextBounds(speedProgressText, 0, speedProgressText.length, progressTextBounds)
 
-        minWidth = max(maxTextBounds.width(), progressTextBounds.width()) * 6 + paddingLeft + paddingRight
-        minHeight = (maxTextBounds.height() + progressTextBounds.height()) * 6 + paddingTop + paddingBottom
+        minWidth = max(maxTextBounds.width(), progressTextBounds.width()) + paddingLeft + paddingRight
+        minHeight = (maxTextBounds.height() + progressTextBounds.height()) + paddingTop + paddingBottom
+
+        Log.v("DebugTextBoun", "onMeasure, maxTextBounds: ${maxTextBounds.width()} ${maxTextBounds.height()}")
+        Log.v("DebugTextBoun", "onMeasure, minW, minH on Text with paddings: ${minWidth} ${minHeight}")
 
         val desiredWidth =
             max(minWidth, suggestedMinimumWidth) // suggested не учитывает paddings!

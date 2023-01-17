@@ -16,7 +16,7 @@
         android:paddingTop="200dp"
         android:paddingRight="190dp"
         android:paddingBottom="@dimen/speed_padding"
-        app:max_speed="20000000"
+        app:max_speed="200"
         app:medium_speed_color="@android:color/holo_orange_light" />
 
     <SeekBar
