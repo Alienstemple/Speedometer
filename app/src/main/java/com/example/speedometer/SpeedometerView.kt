@@ -165,7 +165,7 @@ class SpeedometerView @JvmOverloads constructor(
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         Log.d("Speed", "onSizeChanged called")
-        radius = (min(width - paddingLeft - paddingRight, height - paddingTop - paddingBottom)/2).toFloat()
+        radius = (min(measuredWidth - paddingLeft - paddingRight, measuredHeight - paddingTop - paddingBottom)/2).toFloat()
         Log.d("Speed", "Radius in onSizeChanged: $radius")
 
         with(mainRect) {  // Initialize mainRect
