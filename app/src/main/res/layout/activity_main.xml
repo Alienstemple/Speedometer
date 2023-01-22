@@ -37,8 +37,14 @@
             android:id="@+id/change_padding_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Remove paddings" />
+            android:text="@string/remove_paddings" />
+
+        <Button
+            android:id="@+id/animate_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/animate" />
 
 
-<!--    </LinearLayout>-->
+        <!--    </LinearLayout>-->
 </LinearLayout>

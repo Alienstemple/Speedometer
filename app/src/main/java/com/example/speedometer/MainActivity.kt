@@ -1,13 +1,19 @@
 package com.example.speedometer
 
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.animation.AccelerateInterpolator
 import android.widget.SeekBar
 import com.example.speedometer.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainBinding: ActivityMainBinding
+    private var speedAnim = ObjectAnimator()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -34,6 +40,35 @@ class MainActivity : AppCompatActivity() {
 
                 }
             })
+
+
+//            speedAnim = AnimatorInflater.loadAnimator(this@MainActivity, R.animator.custom_view_animator) // TODO cannot cast Animator Set to ObjectAnimator
+//            speedAnim.target = speedometerView
+
+                mainBinding.animateBtn.setOnClickListener {
+
+                AnimatorSet().apply {
+
+                    val alpha = ObjectAnimator.ofFloat(speedometerView, "alpha", 0.0f , 1.0f)
+                    val translation = ObjectAnimator.ofFloat(speedometerView, "translationY", 300.0f , 0.0f)
+                    playTogether(alpha, translation)
+                    duration = 2000
+                    interpolator = AccelerateInterpolator()
+                    start()
+                }
+            }
         }
+
+
     }
+//
+//    override fun onStart() {
+//        super.onStart()
+//        speedAnim.start()
+//    }
+//
+//    override fun onStop() {
+//        super.onStop()
+//        speedAnim.end()
+//    }
 }

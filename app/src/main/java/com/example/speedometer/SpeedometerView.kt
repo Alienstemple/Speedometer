@@ -1,5 +1,7 @@
 package com.example.speedometer
 
+import android.animation.AnimatorInflater
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.*
 import android.os.Parcelable
@@ -18,7 +20,7 @@ class SpeedometerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.SpeedometerStyle,
-    defStyleRes: Int = R.style.BasicSpeedometerStyle
+    defStyleRes: Int = R.style.BasicSpeedometerStyle,
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
 
     val max: Int  // Must be public!
@@ -88,8 +90,10 @@ class SpeedometerView @JvmOverloads constructor(
         paintText.getTextBounds(maxText, 0, maxText.length, maxTextBounds)
         paintText.getTextBounds(speedProgressText, 0, speedProgressText.length, progressTextBounds)
 
-        minWidth = max(maxTextBounds.width(), progressTextBounds.width()) * 6 + paddingLeft + paddingRight
-        minHeight = (maxTextBounds.height() + progressTextBounds.height()) * 6 + paddingTop + paddingBottom
+        minWidth =
+            max(maxTextBounds.width(), progressTextBounds.width()) * 6 + paddingLeft + paddingRight
+        minHeight =
+            (maxTextBounds.height() + progressTextBounds.height()) * 6 + paddingTop + paddingBottom
 
         Log.v("Speed", " min w $minWidth")
         Log.v("Speed", " min h $minHeight")
@@ -122,9 +126,11 @@ class SpeedometerView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 //        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        Log.d("Speed","onMeasure called. Paddings: $paddingLeft $paddingTop $paddingRight $paddingBottom")
+        Log.d("Speed",
+            "onMeasure called. Paddings: $paddingLeft $paddingTop $paddingRight $paddingBottom")
 
-        radius = (min(width - paddingLeft - paddingRight, height - paddingTop - paddingBottom)/2).toFloat()
+        radius = (min(width - paddingLeft - paddingRight,
+            height - paddingTop - paddingBottom) / 2).toFloat()
         Log.d("Speed", "Radius in onMeasure: $radius")
 
         Log.v("Speed", "onMeasure w " + MeasureSpec.toString(widthMeasureSpec))
@@ -133,8 +139,10 @@ class SpeedometerView @JvmOverloads constructor(
         paintText.getTextBounds(maxText, 0, maxText.length, maxTextBounds)
         paintText.getTextBounds(speedProgressText, 0, speedProgressText.length, progressTextBounds)
 
-        minWidth = max(maxTextBounds.width(), progressTextBounds.width()) * 6 + paddingLeft + paddingRight
-        minHeight = (maxTextBounds.height() + progressTextBounds.height()) * 6 + paddingTop + paddingBottom
+        minWidth =
+            max(maxTextBounds.width(), progressTextBounds.width()) * 6 + paddingLeft + paddingRight
+        minHeight =
+            (maxTextBounds.height() + progressTextBounds.height()) * 6 + paddingTop + paddingBottom
 
         val desiredWidth =
             max(minWidth, suggestedMinimumWidth) // suggested не учитывает paddings!
@@ -159,13 +167,16 @@ class SpeedometerView @JvmOverloads constructor(
             resolveSizeAndState(desiredHeight, heightMeasureSpec, 0)
         )
         Log.d("Speed", "Applied: $measuredWidth $measuredHeight")
-        Log.d("Speed", "Got from resolve w ${resolveSizeAndState(desiredWidth, widthMeasureSpec, 0)}")
-        Log.d("Speed", "Got from resolve h ${resolveSizeAndState(desiredHeight, heightMeasureSpec, 0)}")
+        Log.d("Speed",
+            "Got from resolve w ${resolveSizeAndState(desiredWidth, widthMeasureSpec, 0)}")
+        Log.d("Speed",
+            "Got from resolve h ${resolveSizeAndState(desiredHeight, heightMeasureSpec, 0)}")
     }
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         Log.d("Speed", "onSizeChanged called")
-        radius = (min(measuredWidth - paddingLeft - paddingRight, measuredHeight - paddingTop - paddingBottom)/2).toFloat()
+        radius = (min(measuredWidth - paddingLeft - paddingRight,
+            measuredHeight - paddingTop - paddingBottom) / 2).toFloat()
         Log.d("Speed", "Radius in onSizeChanged: $radius")
 
         with(mainRect) {  // Initialize mainRect
@@ -188,10 +199,22 @@ class SpeedometerView @JvmOverloads constructor(
         super.onDraw(canvas)
 
         // Draw paddings
-        canvas.drawLine(paddingLeft.toFloat(), 0f, paddingLeft.toFloat(), height.toFloat(), paintHand)
-        canvas.drawLine(0f, paddingTop.toFloat(),width.toFloat(),  paddingTop.toFloat(), paintHand)
-        canvas.drawLine(width - paddingRight.toFloat(), 0f, width - paddingRight.toFloat(), height.toFloat(), paintHand)
-        canvas.drawLine(0f, height - paddingBottom.toFloat(), width.toFloat(),  height - paddingBottom.toFloat(), paintHand)
+        canvas.drawLine(paddingLeft.toFloat(),
+            0f,
+            paddingLeft.toFloat(),
+            height.toFloat(),
+            paintHand)
+        canvas.drawLine(0f, paddingTop.toFloat(), width.toFloat(), paddingTop.toFloat(), paintHand)
+        canvas.drawLine(width - paddingRight.toFloat(),
+            0f,
+            width - paddingRight.toFloat(),
+            height.toFloat(),
+            paintHand)
+        canvas.drawLine(0f,
+            height - paddingBottom.toFloat(),
+            width.toFloat(),
+            height - paddingBottom.toFloat(),
+            paintHand)
 
 
         // Draw the dial.
@@ -222,8 +245,12 @@ class SpeedometerView @JvmOverloads constructor(
             in 0..max / 3 -> lowColor
             in max / 3..max * 2 / 3 -> mediumColor
             in max * 2 / 3..max -> highColor
-            else -> { paintText.getTextBounds(maxText, 0, maxText.length, maxTextBounds)
-        paintText.getTextBounds(speedProgressText, 0, speedProgressText.length, progressTextBounds)
+            else -> {
+                paintText.getTextBounds(maxText, 0, maxText.length, maxTextBounds)
+                paintText.getTextBounds(speedProgressText,
+                    0,
+                    speedProgressText.length,
+                    progressTextBounds)
 
                 throw RuntimeException("Error hand color")
             }
@@ -264,7 +291,7 @@ class SpeedometerView @JvmOverloads constructor(
 
     @Parcelize   // TODO import
     class SavedState(val superSavedState: Parcelable?, val progress: Int) :
-            View.BaseSavedState(superSavedState), Parcelable
+        View.BaseSavedState(superSavedState), Parcelable
 }
 
 

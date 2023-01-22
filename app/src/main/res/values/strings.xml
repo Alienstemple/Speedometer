@@ -4,4 +4,6 @@
     <string name="speed_ten">10</string>
     <string name="speed_twenty">20</string>
     <string name="speed_thirty">30</string>
+    <string name="remove_paddings">Remove paddings</string>
+    <string name="animate">Animate</string>
 </resources>
